@@ -51,6 +51,8 @@ To make sure that the Apache HTTP server doesn't time out during the creation of
 -   After MediaWiki tells you that everything went smoothly, save your  [LocalSettings.php](https://www.mediawiki.org/wiki/LocalSettings.php "LocalSettings.php")  file to your wiki's root folder, e.g. e:\xampp\htdocs\mywiki.
 -   Direct your browser once again to the appropriate page, e.g. http://localhost/mywiki. It should take you to the Main Page of your new wiki. Congratulations! You're done.
 -   Add any extra  [extensions](https://www.mediawiki.org/wiki/Manual:Extensions "Manual:Extensions")  your wiki is going to require.
+- In the file located in */extensions/Scribunto/includes/engines/LuaStandalone/LuaStandaloneInterpreter.php* comment out line code that looks like `$cmd = '"' . $cmd . '"';`
+
 **Wiki already works**
 ## Installing TemplateStyles Extension
 - [Download](https://www.mediawiki.org/wiki/Special:ExtensionDistributor/TemplateStyles) the file
@@ -91,3 +93,87 @@ To make sure that the Apache HTTP server doesn't time out during the creation of
 
       php extensions/Wikibase/repo/maintenance/rebuildItemsPerSite.php
       php extensions/Wikibase/client/maintenance/populateInterwiki.php
+      
+## Bonus 1: Importing Templates from Wikipedia
+### Step 1: Determine info boxes needed
+-   Find all infoboxes used on English Wikipedia at  [w:Category:Infobox templates](https://en.wikipedia.org/wiki/Category:Infobox_templates "w:Category:Infobox templates")
+-   If there's an info box being used in an article you'd like to import:
+    -   Visit the page's edit screen
+    -   Scroll to the bottom and find the appropriate page name for the infobox template you'd like to import
+
+### Step 2: Export Wikipedia templates
+
+-   Go to English Wikipedia's  [Special:Export](https://en.wikipedia.org/wiki/Special:Export "w:Special:Export")  page and enter the full page names of the infobox templates from step 1.
+-   For your first infobox to work, you'll also need to include the master infobox template,  `Template:Infobox`
+-   Be sure to check the  **Include templates**  checkbox to include other necessary templates
+-   Note that required templates may also include Scribunto modules in the  _module_  namespace
+-   Most templates put their documentation in a subpage, so you may want to include  `/doc`  subpage for each template you're importing
+    -   _Example:_  for  `Template:Infobox`  you should also download  `Template:Infobox/doc`
+
+### Step 3: Export Wikipedia Modules
+
+Many of templates used in Wikipedia, especially the collapsible navigation templates, utilize Scribunto. Without these modules installed, the templates will produce lua error messages. Please expand the list below of modules required for inboxes that are needed.
+
+The following is a list of at least some modules that you should export from English Wikipedia to an XML file. Just cut and paste this list into the list of files to be exported:
+
+-   [w:Module:Citation](https://en.wikipedia.org/wiki/Module:Citation "w:Module:Citation")
+-   [w:Module:Hatnote](https://en.wikipedia.org/wiki/Module:Hatnote "w:Module:Hatnote")
+-   [w:Module:Unsubst](https://en.wikipedia.org/wiki/Module:Unsubst "w:Module:Unsubst")
+-   [w:Module:Sidebar](https://en.wikipedia.org/wiki/Module:Sidebar "w:Module:Sidebar")
+-   [w:Module:Message_box](https://en.wikipedia.org/wiki/Module:Message_box "w:Module:Message box")
+-   [w:Module:Navbox](https://en.wikipedia.org/wiki/Module:Navbox "w:Module:Navbox")
+-   [w:Module:Arguments](https://en.wikipedia.org/wiki/Module:Arguments "w:Module:Arguments")
+-   [w:Module:Yesno](https://en.wikipedia.org/wiki/Module:Yesno "w:Module:Yesno")
+-   [w:Module:Authority_control](https://en.wikipedia.org/wiki/Module:Authority_control "w:Module:Authority control")
+-   [w:Module:Infobox](https://en.wikipedia.org/wiki/Module:Infobox "w:Module:Infobox")
+-   [w:Module:Navbar](https://en.wikipedia.org/wiki/Module:Navbar "w:Module:Navbar")
+
+-   [w:Module:InfoboxImage](https://en.wikipedia.org/wiki/Module:InfoboxImage "w:Module:InfoboxImage")
+
+-   [w:Module:Check_for_unknown_parameters](https://en.wikipedia.org/wiki/Module:Check_for_unknown_parameters "en:Module:Check for unknown parameters")
+
+-   [w:Module:If_empty](https://en.wikipedia.org/wiki/Module:If_empty "en:Module:If empty")
+
+### Step 4: Import infobox templates and Modules
+
+-   Go to your wiki's  [Special:Import](https://www.mediawiki.org/wiki/Special:Import "Special:Import")  page and select the file you created from the export in step 2.
+
+-   The  _modules_  you exported in step 3 will NOT import correctly unless you first have  **successfully installed Scribunto**, which will create the namespace for "modules." After Scribunto is installed, the modules should import properly. Afterward, if you see templates that give a lua error message, try to identify the missing module that must be imported.
+-   Since many templates incorporate images, it is helpful to modify LocalSettings.php to allow instant commons import of images: `$wgUseInstantCommons = true;`
+- 
+### Step 5: De-Wikipediaify
+
+-   You may want to review all of the files that you just imported for references to Wikipedia pages.
+-   You can certainly leave them in place - and are encouraged to update them as links to the appropriate Wikipedia article (possibly using  [interwiki links](https://www.mediawiki.org/wiki/Manual:Interwiki_table "Manual:Interwiki table"))
+-   Pay special attention to categories, which may be buried in the template's code, and may include reference to Wikipedia
+    -   Again, you can leave them, but you may wish to update them to your wiki's name or categorization policy
+
+### Step 6: Additional templates needed
+
+-   Once your import is complete, you should check the template on your wiki to see if it functions correctly
+-   A helpful step is to once again refer to the edit page's templates list
+    -   If there are  [redlinks](https://www.mediawiki.org/wiki/Manual:Glossary#Redlink "Manual:Glossary"), go back to  [step 2](https://www.mediawiki.org/wiki/Manual:Importing_Wikipedia_infoboxes_tutorial#Step_2:_Export_Wikipedia_templates)  and repeat this process to import the missing templates
+
+## Bonus 2 Backups
+### Backing-up
+
+_Main article:  [Manual:Backing up a wiki](https://www.mediawiki.org/wiki/Special:MyLanguage/Manual:Backing_up_a_wiki "Special:MyLanguage/Manual:Backing up a wiki")_
+
+-   In SQL admin, go to the wiki database (typically wikidb), and click Export. Check the first box under "structure" (DROP TABLES), and check the "save as file" checkbox near the bottom. Click Go and save the file to the backup location.
+-   Save a copy of the wiki folder, e.g. mywiki from c:\xampp\htdocs\mywiki to the backup location.
+
+### Restoring
+
+_Main article:  [Manual:Restoring a wiki from backup](https://www.mediawiki.org/wiki/Special:MyLanguage/Manual:Restoring_a_wiki_from_backup "Special:MyLanguage/Manual:Restoring a wiki from backup")_
+
+-   Install XAMPP on the new server.
+-   In SQL admin:
+    -   Create a new blank database with the default options and a name of your choice.
+    -   Import the database file you backed-up.
+    -   Change the SQL password of the root for that db (in privileges tab)
+-   Copy the wiki folder from back-up into the new htdocs folder.
+-   Change LocalSettings.php to reflect the new db username and password.
+
+#### Maximum execution time exceeded
+
+If you get  _Fatal error: Maximum execution time of xx seconds exceeded ..._  edit the file config.inc.php in folder phpMyAdmin and set  `$cfg['ExecTimeLimit'] = 0;`
