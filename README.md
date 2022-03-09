@@ -32,9 +32,10 @@ We will be installing MediaWiki on a flash drive and enabling infoboxes.
 
 To make sure that the Apache HTTP server doesn't time out during the creation of the databases, modify the php.ini config file:
 
-1.  Open the php.ini (can be found in the folder  _xampp/php_) file using your favorite text editor and find the following section and change to  **max_execution_time = 600**.
+1. Open the php.ini (can be found in the folder  _xampp/php_) file using your favorite text editor and find the following section and change to  **max_execution_time = 600**.
 2. Look for Dynamic Extensions and make sure "extension=intl" is uncommented.
-3.  Save the file and restart Apache
+3. Change upload_max_filesize = 150M post_max_size = 150M
+4. Save the file and restart Apache
 ## Setting up MediaWiki
 
 -   [Download MediaWiki](https://releases.wikimedia.org/mediawiki/1.37/mediawiki-1.37.1.tar.gz "download:mediawiki/1.37/mediawiki-1.37.1.tar.gz") version 1.37.1.
