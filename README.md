@@ -94,6 +94,8 @@ To make sure that the Apache HTTP server doesn't time out during the creation of
       php extensions/Wikibase/repo/maintenance/rebuildItemsPerSite.php
       php extensions/Wikibase/client/maintenance/populateInterwiki.php
       
+- Copy the content of `MediaWiki:Common.css` and `MediaWiki:Common.js` into your wiki (create the page).
+      
 ## Bonus 1: Importing Templates from Wikipedia
 ### Step 1: Determine info boxes needed
 -   Find all infoboxes used on English Wikipedia at  [w:Category:Infobox templates](https://en.wikipedia.org/wiki/Category:Infobox_templates "w:Category:Infobox templates")
