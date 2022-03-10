@@ -117,7 +117,7 @@ To make sure that the Apache HTTP server doesn't time out during the creation of
 
 Many of templates used in Wikipedia, especially the collapsible navigation templates, utilize Scribunto. Without these modules installed, the templates will produce lua error messages. Please expand the list below of modules required for inboxes that are needed.
 
-The following is a list of at least some modules that you should export from English Wikipedia to an XML file. Just cut and paste this list into the list of files to be exported (you might want to try doing one by one, in case it times out doing a batch, or use `php importDump.php --conf ../LocalSettings.php /path_to/dumpfile.xml.gz --username-prefix=""`):
+The following is a list of at least some modules that you should export from English Wikipedia to an XML file. Just cut and paste this list into the list of files to be exported (you might want to try doing one by one, in case it times out doing a batch, or use `php importDump.php --conf ../LocalSettings.php /path_to/dumpfile.xml.gz --username-prefix=""` in the maintenance folder):
 
 -   [w:Module:Citation](https://en.wikipedia.org/wiki/Module:Citation "w:Module:Citation")
 -   [w:Module:Hatnote](https://en.wikipedia.org/wiki/Module:Hatnote "w:Module:Hatnote")
